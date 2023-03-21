@@ -1,70 +1,133 @@
-# Getting Started with Create React App
+# Introduction
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Rest-Api-Doctors was built from the ground-up to learn Rest API and use Postman.
 
-## Available Scripts
+## Use Cases
 
-In the project directory, you can run:
+The use case for this API is to gather information for a given patient name, so that you can retrieve their ID number and all their visits, as well as their doctors.
 
-### `npm start`
+## Authorization
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+All API requests require the use of a generated API key. You can find your API key, or generate a new one, by navigating to the /settings endpoint.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Alternatively, you may append the `api_key=[API_KEY]` as a GET parameter to authorize yourself to the API. But note that this is likely to leave traces in things like your history, if accessing the API through a browser.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### GET ALL DOCTORS
+```http
+GET /api/v1/doctors
+```
+Response
+```javascript
+[
+    {
+        "id": "int",
+        "name": "string",
+        "specialty": "string"
+    }
+]
+```
 
-### `npm run build`
+### GET A DOCTOR BY ID #
+```http
+GET /api/v1/doctors/:id?id=1)
+```
+Response
+```javascript
+{
+    "id": 1,
+    "name": "Jeff Anderson",
+    "specialty": "Cardiologist"
+}
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### CREATE A NEW DOCTOR
+```http
+POST /api/v1/doctors
+```
+Response
+```javascript
+{
+    "id": 4,
+    "name": "Doctor Who",
+    "specialty": "Dermatologist"
+}
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### GET ALL PATIENTS
+```http
+GET /api/v1/patients
+```
+Response
+```javascript
+[
+    {
+        "id": "int",
+        "name": "string"
+    }
+]
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### GET PATIENT BY ID #
+```http
+GET /api/v1/patients/Alan Mckenzie?identifier=2
+```
+Response
+```javascript
+{
+    "id": "int",
+    "name": "string"
+}
+```
 
-### `npm run eject`
+### GET VISITS BY PATIENT ID, DOCTOR ID, PATIENT NAME or DOCTOR NAME
+```http
+GET /api/v1/visits?patientid=1&doctorid=1&doctorname=Jeff Anderson&patientname=Alan Mckenzie
+```
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `patientid` | `int` | **Required**. Your API key |
+| `doctorid` | `int` | **Required**. Your API key |
+| `doctorname` | `string` | **Required**. Your API key |
+| `patientname` | `string` | **Required**. Your API key |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Response
+```javascript
+[
+    {
+        "doctorName": "string",
+        "doctorSpecialty": "string",
+        "visitDate": "string",
+        "patientName": "string"
+    }
+]
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### CREATE A NEW PATIENT
+```http
+POST /api/v1/patients
+```
+Response
+```javascript
+{
+    "id": "int",
+    "name": "string"
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Responses
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, it returns a JSON response error
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Status Codes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Gophish returns the following status codes in its API:
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Status Code | Description |
+| :--- | :--- |
+| 200 | `OK` |
+| 201 | `CREATED` |
+| 400 | `BAD REQUEST` |
+| 404 | `NOT FOUND` |
+| 500 | `INTERNAL SERVER ERROR` |
